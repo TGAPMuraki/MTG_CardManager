@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,16 +17,15 @@ namespace MTG_CardManager
         public String name { get; set; }
         public String ruleText { get; set; }
         public String flavorText { get; set; }
-        public String[] types { get; set; }
+        public List<String> types { get; set; }
         public Color[] color { get; set; }
         public String manaCost { get; set; }
         public String power { get; set; }
         public String toughness { get; set; }
         public int convertedManaCost { get { return ConvertManaCost(manaCost); } }
-        public string type { get; set; }
+        public List<String> subTypes { get; set; }
         public string editions { get; set; }
-        public byte[] image { get; set; }
-        public System.IO.Stream test;
+        public Bitmap image { get; set; }
 
         public int ConvertManaCost(String mana)
         {
