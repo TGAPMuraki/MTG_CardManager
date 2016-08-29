@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace MTG_CardManager
 {
-    
+
     enum Color { Colorless, White, Blue, Black, Red, Green }
     enum Rarity { BasicLand, Common, Uncommon, Rare, MythicRare, Special }
 
@@ -23,7 +23,9 @@ namespace MTG_CardManager
         public String toughness { get; set; }
         public int convertedManaCost { get { return ConvertManaCost(manaCost); } }
         public string type { get; set; }
-        public string edition { get; set; }
+        public string editions { get; set; }
+        public byte[] image { get; set; }
+        public System.IO.Stream test;
 
         public int ConvertManaCost(String mana)
         {
@@ -31,7 +33,7 @@ namespace MTG_CardManager
             Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
             Match match = regex.Match(mana);
             int manaCost = 0;
-            while(match.Success)
+            while (match.Success)
             {
                 String value = match.Value;
                 if (value.Contains("/"))
@@ -41,7 +43,7 @@ namespace MTG_CardManager
                 {
                     manaCost += Convert.ToInt32(value);
                 }
-                catch(FormatException error)
+                catch (FormatException error)
                 {
                     if (!"WUBRG".Contains(value))
                         throw error;

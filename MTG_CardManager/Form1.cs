@@ -21,36 +21,34 @@ namespace MTG_CardManager
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var card = new MagicCard();
-            MessageBox.Show(card.ConvertManaCost("20UU{W/R}{U/B}{2/R}").ToString());
+            MagicCard Card = MagicCardsInfo_WebReader.URLToMagicCard("http://magiccards.info/shm/en/260.html");
+            pictureBox1.ImageLocation = "http://magiccards.info/scans/en/shm/260.jpg";
         }
 
-        private void readHTML()
+        private void button2_Click(object sender, EventArgs e)
         {
-            string urlAddress = "http://google.com";
+            webBrowser1.Navigate(textBox1.Text);            
+        }
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlAddress);
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            if (response.StatusCode == HttpStatusCode.OK)
+        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {            
+            HtmlElementCollection coll = webBrowser1.Document.Images;
+            HtmlElement ele = null; 
+            for (int i = 0; i < coll.Count; i++)
             {
-                Stream receiveStream = response.GetResponseStream();
-                StreamReader readStream = null;
-
-                if (response.CharacterSet == null)
-                {
-                    readStream = new StreamReader(receiveStream);
-                }
-                else
-                {
-                    readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
-                }
-
-                string data = readStream.ReadToEnd();
-
-                response.Close();
-                readStream.Close();
+                ele = coll[i];
             }
+            
+        }
+
+        private void webBrowser1_ControlAdded(object sender, ControlEventArgs e)
+        {
+            MessageBox.Show(e.Control.Name);
+        }
+
+        private void webBrowser1_FileDownload(object sender, EventArgs e)
+        {
+            WebBrowser wb = (WebBrowser)sender;
         }
     }
 }
