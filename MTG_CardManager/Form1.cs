@@ -50,25 +50,5 @@ namespace MTG_CardManager
             lbl_editions.Text = "Editions:\n" + ListToText(Card.editions);
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            webBrowser1.Navigate(textBox1.Text);
-            WebClient wc = new WebClient();
-        }
-
-        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {                                   
-            
-        }
-
-        private void webBrowser1_ControlAdded(object sender, ControlEventArgs e)
-        {
-            MessageBox.Show(e.Control.Name + "_1");
-        }
-
-        private void webBrowser1_FileDownload(object sender, EventArgs e)
-        {
-            WebBrowser wb = (WebBrowser)sender;            
-        }
     }
 }
