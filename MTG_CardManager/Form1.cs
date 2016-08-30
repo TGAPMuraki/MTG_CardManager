@@ -19,9 +19,35 @@ namespace MTG_CardManager
             InitializeComponent();
         }
 
+        private String ListToText(List<String> list)
+        {
+            String result = "";
+            if (list == null)
+                return "";
+            for(int i = 0;i < list.Count;i++)
+            {
+                result += list[i] + " || ";
+            }
+            return result;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
-            MagicCard Card = MagicCardsInfo_WebReader.URLToMagicCard(textBox1.Text);            
+            MagicCard Card = MagicCardsInfo_WebReader.URLToMagicCard(textBox1.Text);
+            pictureBox1.Image = Card.image;
+            pictureBox1.Width = pictureBox1.Image.Width;
+
+            lbl_Name.Text = "Name:\n" + Card.name;
+            lbl_ruleText.Text = "RuleText:\n" + Card.ruleText;
+            lbl_FlavorText.Text = "FlavorText:\n" + Card.flavorText;
+            lbl_Types.Text = "Types:\n" + ListToText(Card.types); 
+            lbl_Color.Text = "Color:\n" + Card.color;
+            lbl_ManaCost.Text = "ManaCost:\n" + Card.manaCost;
+            lbl_Power.Text = "Power:\n" + Card.power;
+            lbl_toughness.Text = "Toughness:\n" + Card.toughness;
+            lbl_convmanacost.Text = "ConvManaCost:\n" + Card.convertedManaCost.ToString();
+            lbl_subtypes.Text = "SubTypes:\n" + ListToText(Card.subTypes);
+            lbl_editions.Text = "Editions:\n" + ListToText(Card.editions);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -31,43 +57,7 @@ namespace MTG_CardManager
         }
 
         private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
-        {            
-            HtmlElementCollection coll = webBrowser1.Document.Images;
-            HtmlElement ele = null; 
-            for (int i = 0; i < coll.Count; i++)
-            {
-                ele = coll[i];
-            }
-            Bitmap bmp = new Bitmap(ele.ClientRectangle.Width + ele.OffsetRectangle.X, ele.ClientRectangle.Height + +ele.OffsetRectangle.Y);
-            Rectangle imageRectangle = ele.ClientRectangle;
-
-            if (textBox2.Text == "")
-            {
-                textBox2.Text = ele.OffsetRectangle.X.ToString();
-            }
-            if (textBox3.Text == "")
-            {
-                textBox3.Text = ele.OffsetRectangle.Y.ToString();
-            }
-
-            imageRectangle.Width += Convert.ToInt32(textBox2.Text);
-            imageRectangle.Height += Convert.ToInt32(textBox3.Text);
-
-            webBrowser1.DrawToBitmap(bmp, imageRectangle);
-
-            Rectangle cropRect = ele.OffsetRectangle;
-            Bitmap src = bmp;
-            Bitmap target = new Bitmap(cropRect.Width, cropRect.Height);
-
-            using (Graphics g = Graphics.FromImage(target))
-            {
-                g.DrawImage(src, new Rectangle(0, 0, target.Width, target.Height),
-                                 cropRect,
-                                 GraphicsUnit.Pixel);
-            }
-
-            pictureBox2.Image = target;
-                        
+        {                                   
             
         }
 

@@ -53,9 +53,7 @@ namespace MTG_CardManager
         // Gets the raw meta-information of the card 
         private static String GetCardRawMetaInformation(String mainBody)
         {
-            mainBody = mainBody.Substring(mainBody.IndexOf("<p>") + 1);
-            String metaInformation = CutOutString(mainBody, ">", "<");
-            return metaInformation;
+            return CutOutString(mainBody, "<p>", "</p>");
         }
 
         //************************************************************************
@@ -64,8 +62,11 @@ namespace MTG_CardManager
         {
             if (metaInformation.Contains("—"))
                 metaInformation = metaInformation.Substring(0, metaInformation.IndexOf("—")).Trim();
-            else
+            else if (metaInformation.Contains(","))
                 metaInformation = metaInformation.Substring(0, metaInformation.IndexOf(",")).Trim();
+            else if (metaInformation.Contains("\n"))
+                metaInformation = metaInformation.Substring(0, metaInformation.IndexOf("\n")).Trim();
+
             List<String> cardTypes = new List<String>();
             while(metaInformation.Contains(" "))
             {
@@ -83,7 +84,10 @@ namespace MTG_CardManager
         {
             if (!metaInformation.Contains("—"))
                 return null;
-            metaInformation = CutOutString(metaInformation, "—", ",");
+            if (metaInformation.Contains(","))
+                metaInformation = CutOutString(metaInformation, "—", ",");
+            else if (metaInformation.Contains("\n"))
+                metaInformation = CutOutString(metaInformation, "—", "\n");
             List<String> cardSubTypes = new List<String>();
 
             String pattern = "[^\\d/\\* ]+";
@@ -102,7 +106,10 @@ namespace MTG_CardManager
         // Returns the power of the card
         private static String GetCardPower(String metaInformation)
         {
-            metaInformation = CutOutString(metaInformation, "—", ",");
+            if (metaInformation.Contains(","))
+                metaInformation = CutOutString(metaInformation, "—", ",");
+            else if (metaInformation.Contains("\n"))
+                metaInformation = CutOutString(metaInformation, "—", "\n");
             metaInformation = metaInformation.Substring(metaInformation.LastIndexOf(" ") + 1);
             if (!metaInformation.Contains("/"))
                 return null;
@@ -115,16 +122,122 @@ namespace MTG_CardManager
         // Returns the toughness of the card
         private static String GetCardToughness(String metaInformation)
         {
+            if (metaInformation.Contains(","))
+                metaInformation = CutOutString(metaInformation, "—", ",");
+            else if (metaInformation.Contains("\n"))
+                metaInformation = CutOutString(metaInformation, "—", "\n");
+            metaInformation = metaInformation.Substring(metaInformation.LastIndexOf(" ") + 1);
             if (!metaInformation.Contains("/"))
                 return null;
-            return CutOutString(metaInformation, "/", ",");
+            return CutOutString(metaInformation, "/");
         }
 
         //************************************************************************
         // Returns the mana cost of the card
         private static String GetCardManaCost(String metaInformation)
         {
-            return CutOutString(metaInformation, "\n", "(").Trim();
+            metaInformation = CutOutString(metaInformation, "\n");
+            if (!metaInformation.Contains("\n"))
+                return "";
+            return CutOutString(metaInformation, "", "(").Trim();
+        }
+
+        //************************************************************************
+        // Checks if the color Indicator holds the given color 
+        // Checked Language in given order:
+        //    English
+        //    Deutsch
+        //    Français 
+        //    Italiano 
+        //    Español
+        //    Português 
+        private static bool MultiLanguageIsColor(String colorIndicator, String englishColorName)
+        {
+            colorIndicator = colorIndicator.ToUpper();
+            englishColorName = englishColorName.ToUpper();
+            String[] whiteColorNames = { "White", "Weiß" , "Blanc", "Bianco", "Blanco", "Branco" };
+            String[] blueColorNames = { "Blue", "Blau", "Bleu", "Blu", "Azul", "Azul" };
+            String[] blackColorNames = { "Black", "Schwarz", "Noir", "Nero", "Negro", "Preto" };
+            String[] redColorNames = { "Red", "Rot", "Rouge", "Rosso", "Rojo", "Vermelho" };
+            String[] greenColorNames = { "Green", "Grün", "Vert", "Verde", "Verde", "Verde" };
+            String[][] colorArrays = { whiteColorNames, blueColorNames, blackColorNames, redColorNames, greenColorNames };
+            for(int i = 0;i < colorArrays.Length;i++)
+            {
+                String[] currentArray = colorArrays[i];
+                if(currentArray[0].ToUpper() == englishColorName)
+                {
+                    for(int j = 0;j < currentArray.Length;j++)
+                    {
+                        String colorName = currentArray[j].ToUpper();
+                        if (colorIndicator.Contains(colorName))
+                            return true;
+                    }                    
+                }
+            }
+
+            return false;
+        }
+
+        //************************************************************************
+        // Returns the color of the card
+        private static String GetCardColor(String metaInformation, String manaCost)
+        {
+            String color = "";
+            if(metaInformation.Contains("(Color Indicator: "))
+            {
+                metaInformation = CutOutString(metaInformation, "(Color Indicator: ", ")").ToUpper();
+                if (MultiLanguageIsColor(metaInformation, "White"))
+                    color += "W";
+                if (MultiLanguageIsColor(metaInformation, "Blue"))
+                    color += "U";
+                if (MultiLanguageIsColor(metaInformation, "Black"))
+                    color += "B";
+                if (MultiLanguageIsColor(metaInformation, "Red"))
+                    color += "R";
+                if (MultiLanguageIsColor(metaInformation, "Green"))
+                    color += "G";
+            }
+            else
+            {
+                if (manaCost.Contains("W"))
+                    color += "W";
+                if (manaCost.Contains("U"))
+                    color += "U";
+                if (manaCost.Contains("B"))
+                    color += "B";
+                if (manaCost.Contains("R"))
+                    color += "R";
+                if (manaCost.Contains("G"))
+                    color += "G";
+            }
+            return color;
+        }
+
+        //************************************************************************
+        // Returns the rule text of the card
+        private static String GetCardRuleText(String mainBody)
+        {
+            String ruleText = CutOutString(mainBody, "><b>", "</b></p>").Trim();
+            ruleText = ruleText.Replace("<br>", "\n");
+            return ruleText;
+        }
+
+        //************************************************************************
+        // Returns the flavor text of the card
+        private static String GetCardFlavorText(String mainBody)
+        {
+            String flavorText = CutOutString(mainBody, "><i>", "</i></p>").Trim();
+            flavorText = flavorText.Replace("<br>", "\n");
+            return flavorText;
+        }
+
+        //************************************************************************
+        // Gets the raw extra-information of the card 
+        private static String GetCardRawExtraInformation(String mainBody)
+        {
+            mainBody = CutOutString(mainBody, "<td");
+            String extraInformation = CutOutString(mainBody, ">", "</td>");
+            return extraInformation;
         }
 
         //************************************************************************
@@ -143,15 +256,26 @@ namespace MTG_CardManager
             //    Sub-Type
             //    Power / Toughness 
             //    Mana-Cost
+            //    Color Indicator
             String metaInformation = GetCardRawMetaInformation(mainBody);
             List<String> cardTypes = GetCardTypes(metaInformation);
             List<String> subTypes = GetCardSubTypes(metaInformation);
             String power = GetCardPower(metaInformation);
             String toughness = GetCardToughness(metaInformation);
-            String manaCost = GetCardManaCost(metaInformation);            
+            String manaCost = GetCardManaCost(metaInformation);
+            String color = GetCardColor(metaInformation, manaCost);
 
             // Cuts the Meta-Information away, since it's no longer needed
-            mainBody = CutOutString(mainBody, metaInformation);            
+            mainBody = CutOutString(mainBody, metaInformation);
+
+            String ruleText = GetCardRuleText(mainBody);
+            String flavorText = GetCardFlavorText(mainBody);
+
+            // Extra-Information about other Version
+            //    Other Part of a 2 Faced card
+            //    Editions
+            //    Names in other Languages
+            String extraInformation = GetCardRawExtraInformation(mainBody);
 
             // Filling the Information into a MagicCard object
             MagicCard resultCard = new MagicCard();
@@ -161,6 +285,10 @@ namespace MTG_CardManager
             resultCard.subTypes = subTypes;
             resultCard.power = power;
             resultCard.toughness = toughness;
+            resultCard.manaCost = manaCost;
+            resultCard.color = color;
+            resultCard.ruleText = ruleText;
+            resultCard.flavorText = flavorText;
             resultCard.image = WebImageAsBitmap(imageUrl);
             return resultCard;
         }
@@ -256,20 +384,20 @@ namespace MTG_CardManager
         }
 
         //************************************************************************
-        // Returns the string between to given Strings
-        private static String CutOutString(String mainString, String startString, String endString)
-        {
-            int startPosition = mainString.IndexOf(startString) + startString.Length;
-            int endPosition = mainString.IndexOf(endString);
-            return mainString.Substring(startPosition, endPosition - startPosition);
-        }
-
-        //************************************************************************
         // Returns the string after a given string
         private static String CutOutString(String mainString, String startString)
         {
             int startPosition = mainString.IndexOf(startString) + startString.Length;
             return mainString.Substring(startPosition);
+        }
+
+        //************************************************************************
+        // Returns the string between to given Strings
+        private static String CutOutString(String mainString, String startString, String endString)
+        {            
+            mainString = CutOutString(mainString, startString);
+            int endPosition = mainString.IndexOf(endString);
+            return mainString.Substring(0, endPosition);
         }
     }
 }

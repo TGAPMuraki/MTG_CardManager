@@ -9,22 +9,22 @@ using System.Text.RegularExpressions;
 namespace MTG_CardManager
 {
 
-    enum Color { Colorless, White, Blue, Black, Red, Green }
     enum Rarity { BasicLand, Common, Uncommon, Rare, MythicRare, Special }
 
     class MagicCard
     {
         public String name { get; set; }
+        public List<String> languageNames { get; set; }
         public String ruleText { get; set; }
         public String flavorText { get; set; }
         public List<String> types { get; set; }
-        public Color[] color { get; set; }
+        public String color { get; set; }
         public String manaCost { get; set; }
         public String power { get; set; }
         public String toughness { get; set; }
         public int convertedManaCost { get { return ConvertManaCost(manaCost); } }
         public List<String> subTypes { get; set; }
-        public string editions { get; set; }
+        public List<String> editions { get; set; }
         public Bitmap image { get; set; }
 
         public int ConvertManaCost(String mana)
