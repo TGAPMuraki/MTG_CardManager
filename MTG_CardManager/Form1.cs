@@ -47,7 +47,7 @@ namespace MTG_CardManager
             lbl_toughness.Text = "Toughness:\n" + Card.toughness;
             lbl_convmanacost.Text = "ConvManaCost:\n" + Card.convertedManaCost.ToString();
             lbl_subtypes.Text = "SubTypes:\n" + ListToText(Card.subTypes);
-            lbl_editions.Text = "Editions:\n" + ListToText(Card.editions);
+            lbl_Rarity.Text = "Editions:\n" + Card.rarity;
         }
 
     }

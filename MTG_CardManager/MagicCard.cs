@@ -9,8 +9,6 @@ using System.Text.RegularExpressions;
 namespace MTG_CardManager
 {
 
-    enum Rarity { BasicLand, Common, Uncommon, Rare, MythicRare, Special }
-
     class MagicCard
     {
         public String name { get; set; }
@@ -18,14 +16,15 @@ namespace MTG_CardManager
         public String ruleText { get; set; }
         public String flavorText { get; set; }
         public List<String> types { get; set; }
+        public List<String> subTypes { get; set; }
+        public String rarity { get; set; }
         public String color { get; set; }
         public String manaCost { get; set; }
         public String power { get; set; }
         public String toughness { get; set; }
-        public int convertedManaCost { get { return ConvertManaCost(manaCost); } }
-        public List<String> subTypes { get; set; }
-        public List<String> editions { get; set; }
+        public int convertedManaCost { get { return ConvertManaCost(manaCost); } }        
         public Bitmap image { get; set; }
+        public MagicCard secondPart { get; set; }
 
         public int ConvertManaCost(String mana)
         {

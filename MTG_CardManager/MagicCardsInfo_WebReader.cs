@@ -143,9 +143,29 @@ namespace MTG_CardManager
         }
 
         //************************************************************************
+        // Returns the Index of a Search-Text with multiple Language options
+        // The First Word in the Array must be the equal to the Original Word
+        private static int MultiLanguageIndexOf(String searchString, String originalWord, String[] languageArray)
+        {
+            originalWord = originalWord.ToUpper();
+            if (languageArray[0].ToUpper() == originalWord)
+            {
+                for (int i = 0; i < languageArray.Length; i++)
+                {
+                    String multiLanguageWord = languageArray[i].ToUpper();
+                    int index = searchString.IndexOf(multiLanguageWord);
+                    if (index >= 0)
+                        return index;
+                }
+            }
+
+            return -1;
+        }
+
+        //************************************************************************
         // Checks if the color Indicator holds the given color 
         // Checked Language in given order:
-        //    English
+        //    English (Must be first)
         //    Deutsch
         //    Français 
         //    Italiano 
@@ -153,7 +173,6 @@ namespace MTG_CardManager
         //    Português 
         private static bool MultiLanguageIsColor(String colorIndicator, String englishColorName)
         {
-            colorIndicator = colorIndicator.ToUpper();
             englishColorName = englishColorName.ToUpper();
             String[] whiteColorNames = { "White", "Weiß" , "Blanc", "Bianco", "Blanco", "Branco" };
             String[] blueColorNames = { "Blue", "Blau", "Bleu", "Blu", "Azul", "Azul" };
@@ -166,12 +185,7 @@ namespace MTG_CardManager
                 String[] currentArray = colorArrays[i];
                 if(currentArray[0].ToUpper() == englishColorName)
                 {
-                    for(int j = 0;j < currentArray.Length;j++)
-                    {
-                        String colorName = currentArray[j].ToUpper();
-                        if (colorIndicator.Contains(colorName))
-                            return true;
-                    }                    
+                    return MultiLanguageIndexOf(colorIndicator, englishColorName, currentArray) >= 0;
                 }
             }
 
@@ -273,9 +287,15 @@ namespace MTG_CardManager
 
             // Extra-Information about other Version
             //    Other Part of a 2 Faced card
-            //    Editions
+            //    Editions (Rarity)
             //    Names in other Languages
             String extraInformation = GetCardRawExtraInformation(mainBody);
+            // Get the Link to the Other Part
+            //MagicCard otherPart = GetCardOtherPart(extraInformation); // Not-Used jet 
+            //String editionsRawData = GetCardEditionsRawData(extraInformation);
+            //List<String> editionsWithRarity = GetCardEditionsWithRarity(editionsRawData);
+            //String newestRarity = GetCardNewestRarity(editionsWithRarity);
+            //String linkToNewestEdition = GetCardNewestEditionLink(editionsWithRarity);
 
             // Filling the Information into a MagicCard object
             MagicCard resultCard = new MagicCard();

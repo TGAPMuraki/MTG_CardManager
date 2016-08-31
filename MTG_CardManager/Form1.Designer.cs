@@ -32,7 +32,7 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lbl_editions = new System.Windows.Forms.Label();
+            this.lbl_Rarity = new System.Windows.Forms.Label();
             this.lbl_subtypes = new System.Windows.Forms.Label();
             this.lbl_convmanacost = new System.Windows.Forms.Label();
             this.lbl_toughness = new System.Windows.Forms.Label();
@@ -79,7 +79,7 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.lbl_editions);
+            this.panel1.Controls.Add(this.lbl_Rarity);
             this.panel1.Controls.Add(this.lbl_subtypes);
             this.panel1.Controls.Add(this.lbl_convmanacost);
             this.panel1.Controls.Add(this.lbl_toughness);
@@ -96,17 +96,17 @@
             this.panel1.Size = new System.Drawing.Size(576, 537);
             this.panel1.TabIndex = 6;
             // 
-            // lbl_editions
+            // lbl_Rarity
             // 
-            this.lbl_editions.AutoSize = true;
-            this.lbl_editions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbl_editions.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_editions.Location = new System.Drawing.Point(0, 280);
-            this.lbl_editions.Name = "lbl_editions";
-            this.lbl_editions.Padding = new System.Windows.Forms.Padding(5);
-            this.lbl_editions.Size = new System.Drawing.Size(75, 28);
-            this.lbl_editions.TabIndex = 10;
-            this.lbl_editions.Text = "Editions:";
+            this.lbl_Rarity.AutoSize = true;
+            this.lbl_Rarity.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbl_Rarity.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Rarity.Location = new System.Drawing.Point(0, 280);
+            this.lbl_Rarity.Name = "lbl_Rarity";
+            this.lbl_Rarity.Padding = new System.Windows.Forms.Padding(5);
+            this.lbl_Rarity.Size = new System.Drawing.Size(60, 28);
+            this.lbl_Rarity.TabIndex = 10;
+            this.lbl_Rarity.Text = "Rarity:";
             // 
             // lbl_subtypes
             // 
@@ -207,6 +207,7 @@
             // lbl_ruleText
             // 
             this.lbl_ruleText.AutoSize = true;
+            this.lbl_ruleText.BackColor = System.Drawing.SystemColors.Control;
             this.lbl_ruleText.Dock = System.Windows.Forms.DockStyle.Top;
             this.lbl_ruleText.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_ruleText.Location = new System.Drawing.Point(0, 28);
@@ -219,6 +220,7 @@
             // lbl_Name
             // 
             this.lbl_Name.AutoSize = true;
+            this.lbl_Name.BackColor = System.Drawing.SystemColors.Control;
             this.lbl_Name.Dock = System.Windows.Forms.DockStyle.Top;
             this.lbl_Name.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_Name.Location = new System.Drawing.Point(0, 0);
@@ -263,7 +265,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label lbl_editions;
+        private System.Windows.Forms.Label lbl_Rarity;
         private System.Windows.Forms.Label lbl_subtypes;
         private System.Windows.Forms.Label lbl_convmanacost;
         private System.Windows.Forms.Label lbl_toughness;
